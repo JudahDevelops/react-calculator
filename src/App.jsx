@@ -33,22 +33,66 @@ class Calculator extends Component {
         bottom.innerText = '0';
         break;
       case '=':
-        top.innerText += `=${eval(top.innerText)}`;
         bottom.innerText = eval(top.innerText);
+        top.innerText += `=${eval(top.innerText)}`;
         break;
-      default: 
-        top.innerText += event.target.id;
+      case '/':
+      case '*':
+      case '+':
+        bottom.innerText = event.target.id;
+        if (top.innerText[top.innerText.length - 1] === '/' || top.innerText[top.innerText.length - 1] === '*' || top.innerText[top.innerText.length - 1] === '+' || top.innerText[top.innerText.length - 1] === '-') {
+          switch (event.target.id) {
+            case '/':
+              top.innerText = top.innerText.slice(0, top.innerText.length - 1) + '/';
+              break;
+            case '*':
+              top.innerText = top.innerText.slice(0, top.innerText.length - 1) + '*';
+              break;
+            case '+':
+              top.innerText = top.innerText.slice(0, top.innerText.length - 1) + '+';
+              break;
+          }
+        } else if (top.innerText.indexOf('=') !== -1) {
+          top.innerText = top.innerText.slice(top.innerText.indexOf('=') + 1) + event.target.id;
+        } else {
+          top.innerText += event.target.id;
+        }
+        break;
+      case '-':
+        bottom.innerText = event.target.id;
+        if (top.innerText[top.innerText.length - 1] === '/' || top.innerText[top.innerText.length - 1] === '*' || top.innerText[top.innerText.length - 1] === '+') {
+          top.innerText += '-';
+        } else if (top.innerText.indexOf('=') !== -1) {
+          top.innerText = top.innerText.slice(top.innerText.indexOf('=') + 1) + event.target.id;
+        } else {
+          top.innerText += event.target.id;
+        }
+        break;
+      default:
+        if (bottom.innerText[bottom.innerText.length - 1] === '/' || bottom.innerText[bottom.innerText.length - 1] === '*' || bottom.innerText[bottom.innerText.length - 1] === '+' || bottom.innerText[bottom.innerText.length - 1] === '-' || bottom.innerText[bottom.innerText.length - 1] === '0' || top.innerText.includes('=')) {
+          bottom.innerText = '';
+        }
+        if (top.innerText.includes('=')) {
+          top.innerText = event.target.id;
+        } else {
+          top.innerText += event.target.id;
+        }
+        if (bottom.innerText.length === 22) {
+          let placeholder = bottom.innerText;
+          bottom.innerText = 'DIGIT LIMIT MET'
+          setTimeout(() => {
+            bottom.innerText = placeholder;
+          }, 1000);
+        } 
+        
+        bottom.innerText += event.target.id;
+        break;
     }
-    
   }
 
 
 
-
   render() {
-
-    
-
     return (
       <div id='calculator-cont'>
         <div id='display'>
@@ -65,13 +109,13 @@ class Calculator extends Component {
             <button onClick={this.handleClick}  id='7'>7</button>
             <button onClick={this.handleClick}  id='8'>8</button>
             <button onClick={this.handleClick}  id='9'>9</button>
-            <button onClick={this.handleClick}  class='lighter'>-</button>
+            <button onClick={this.handleClick}  class='lighter' id='-'>-</button>
           </div>
           <div class='row' id='row3'>
             <button onClick={this.handleClick}  id='4'>4</button>
             <button onClick={this.handleClick}  id='5'>5</button>
             <button onClick={this.handleClick}  id='6'>6</button>
-            <button onClick={this.handleClick}  class='lighter'>+</button>
+            <button onClick={this.handleClick}  class='lighter' id='+'>+</button>
           </div>
           <div class='row' id='row4'>
             <div id='left4'>
