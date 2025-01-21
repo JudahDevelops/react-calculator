@@ -60,32 +60,38 @@ class Calculator extends Component {
         break;
       case '-':
         bottom.innerText = event.target.id;
-        if (top.innerText[top.innerText.length - 1] === '/' || top.innerText[top.innerText.length - 1] === '*' || top.innerText[top.innerText.length - 1] === '+') {
+        if (top.innerText[top.innerText.length - 1] === '/' || top.innerText[top.innerText.length - 1] === '*' || top.innerText[top.innerText.length - 1] === '+' || typeof top.innerText[top.innerText.length - 1] === 'number') {
           top.innerText += '-';
-        } else if (top.innerText.indexOf('=') !== -1) {
+        } else if (top.innerText[top.innerText.length - 1] === '-' && top.innerText[top.innerText.length - 2] === '-') {
+          top.innerText = top.innerText;
+        }else if (top.innerText.indexOf('=') !== -1) {
           top.innerText = top.innerText.slice(top.innerText.indexOf('=') + 1) + event.target.id;
+        } else if (top.innerText.length === 1 && top.innerText[0] === '-') {
+          top.innerText = top.innerText;
+
         } else {
           top.innerText += event.target.id;
         }
         break;
       default:
-        if (bottom.innerText[bottom.innerText.length - 1] === '/' || bottom.innerText[bottom.innerText.length - 1] === '*' || bottom.innerText[bottom.innerText.length - 1] === '+' || bottom.innerText[bottom.innerText.length - 1] === '-' || bottom.innerText[bottom.innerText.length - 1] === '0' || top.innerText.includes('=')) {
-          bottom.innerText = '';
-        }
-        if (top.innerText.includes('=')) {
-          top.innerText = event.target.id;
+        if (bottom.innerText.length < 22 && bottom.innerText !== 'DIGIT LIMIT MET') {
+          if (bottom.innerText[bottom.innerText.length - 1] === '/' || bottom.innerText[bottom.innerText.length - 1] === '*' || bottom.innerText[bottom.innerText.length - 1] === '+' || bottom.innerText[bottom.innerText.length - 1] === '-' || bottom.innerText[bottom.innerText.length - 1] === '0' || top.innerText.includes('=')) {
+            bottom.innerText = '';
+          }
+          if (top.innerText.includes('=')) {
+            top.innerText = event.target.id;
+          } else {
+            top.innerText += event.target.id;
+          }
+          bottom.innerText += event.target.id;
         } else {
-          top.innerText += event.target.id;
-        }
-        if (bottom.innerText.length === 22) {
           let placeholder = bottom.innerText;
-          bottom.innerText = 'DIGIT LIMIT MET'
+          bottom.innerText = 'DIGIT LIMIT MET';
           setTimeout(() => {
             bottom.innerText = placeholder;
-          }, 1000);
-        } 
+          }, 700);
+        }
         
-        bottom.innerText += event.target.id;
         break;
     }
   }
